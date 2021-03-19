@@ -1,4 +1,5 @@
-
+# pip install allure-pytest
+#
 # just execute test 'pytest -v -s allure_1.py'
 #
 # to generate allure report you need to use
