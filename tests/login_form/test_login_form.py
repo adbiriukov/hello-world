@@ -28,14 +28,13 @@ def test_correct_login(set_up):
     assert driver.find_element_by_xpath('//*[@id="content"]/div/div[1]/h1').is_displayed()
 
 
-@allure.description("login by using cookies")
-@allure.severity(severity_level="NORMAL")
-def test_login_by_using_cookies(set_up):
-    driver.delete_all_cookies()
-    cookie = {'domain': 'opensource-demo.orangehrmlive.com', 'httpOnly': True, 'name': 'orangehrm', 'path': '/', 'secure': True, 'value': 'f4263d38b6a887a40dbaa7267fdabc40'}
-    driver.add_cookie(cookie)
-    driver.refresh()
-    assert True == driver.find_element_by_xpath('//*[@id="content"]/div/div[1]/h1').is_displayed()
+# @allure.description("login by using cookies")
+# @allure.severity(severity_level="NORMAL")
+# def test_login_by_using_cookies(set_up):
+#     driver.delete_all_cookies()
+#     driver.add_cookie(cookie)
+#     driver.refresh()
+#     assert True == driver.find_element_by_xpath('//*[@id="content"]/div/div[1]/h1').is_displayed()
 
 def test_logout(set_up):
     driver.find_element(*LoginFormElements.name).send_keys(LoginFormElements.correct_login)
