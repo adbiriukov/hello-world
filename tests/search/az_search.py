@@ -1,20 +1,10 @@
-from ddt import ddt, data, unpack
 from selenium import webdriver
-
-# from elements.amazon_web_elements import WebElements
 import allure
 import pytest
 
-# search value and expected count
-@ddt
-@data(('phone', 'results'), ('music', 'results'))
-@unpack
 
 @pytest.fixture()
-@ddt
-@data(('phone', 'results'), ('music', 'results'))
-@unpack
-def set_up(search_value, expected_count):
+def set_up():
     global driver
     driver = webdriver.Chrome(executable_path="../../chromedriver.exe")
     driver.implicitly_wait(5)
@@ -26,7 +16,8 @@ def set_up(search_value, expected_count):
 
 @allure.description("Check for search field is displayed")
 @allure.severity(severity_level="NORMAL")
-def test_search(set_up):
+@pytest.mark.parametrize('search_value, expected_count', [('phone', 'music'), ('results', 'results')])
+def test_search(set_up, search_value, expected_count):
     search_field = driver.find_element_by_name('field-keywords')
     search_field.clear()
     search_field.send_keys(search_value)
