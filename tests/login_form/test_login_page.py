@@ -1,33 +1,63 @@
-import unittest
 from selenium import webdriver
+import pytest
+import allure
 
 
-class HomePageTest(unittest.TestCase):
-    @classmethod
-    def setUp(cls):
-        cls.driver = webdriver.Chrome(executable_path="../../chromedriver.exe")
-        cls.driver.implicitly_wait(5)
-        cls.driver.get("https://opensource-demo.orangehrmlive.com/")
-        cls.driver.maximize_window()
-
-    def test_facebook_link(self):
-        self.driver.find_element_by_xpath('//*[@id="social-icons"]/a[2]/img').click()
-        self.driver.switch_to.window(self.driver.window_handles[-1])
-        self.assertEqual(self.driver.current_url, 'https://www.facebook.com/OrangeHRM')
+@pytest.fixture()
+def set_up():
+    global driver
+    driver = webdriver.Chrome(executable_path="../../chromedriver.exe")
+    driver.implicitly_wait(5)
+    driver.get("https://opensource-demo.orangehrmlive.com/")
+    driver.maximize_window()
+    yield
+    driver.quit()
 
 
-    def test_forget_password_option(self):
-        self.driver.find_element_by_xpath('//*[@id="forgotPasswordLink"]/a').click()
-        self.assertTrue(self.driver.find_element_by_id('securityAuthentication_userName').is_displayed())
-        self.driver.find_element_by_id('btnCancel').click()
-        self.assertTrue(self.driver.find_element_by_id('txtUsername').is_displayed())
-
-    @classmethod
-    def tearDown(cls):
-        # close the browser window
-        cls.driver = webdriver.Chrome(executable_path="../../chromedriver.exe")
-        cls.driver.quit()
+@allure.description("Check that facebook link is working")
+@allure.severity(severity_level="NORMAL")
+def test_facebook_link(set_up):
+    driver.find_element_by_xpath('//*[@id="social-icons"]/a[2]/img').click()
+    driver.switch_to.window(driver.window_handles[-1])
+    assert driver.current_url == 'https://www.facebook.com/OrangeHRM'
 
 
-if __name__ == '__main__':
-    unittest.main(verbosity=2)
+@allure.description("Check that 'Forgot your password?' link is working")
+@allure.severity(severity_level="NORMAL")
+def test_forget_password_option(set_up):
+    driver.find_element_by_xpath('//*[@id="forgotPasswordLink"]/a').click()
+    driver.find_element_by_id('securityAuthentication_userName').is_displayed()
+    driver.find_element_by_id('btnCancel').click()
+    driver.find_element_by_id('txtUsername').is_displayed()
+
+
+@allure.description("Check that orangehrm link is working")
+@allure.severity(severity_level="NORMAL")
+def test_orangehrm_link(set_up):
+    driver.find_element_by_xpath('//*[@id="footer"]/div[1]/a').click()
+    driver.switch_to.window(driver.window_handles[-1])
+    assert driver.current_url == 'https://www.orangehrm.com/'
+
+
+@allure.description("Check that twitter link is working")
+@allure.severity(severity_level="NORMAL")
+def test_twitter_link(set_up):
+    driver.find_element_by_xpath('//*[@id="social-icons"]/a[3]/img').click()
+    driver.switch_to.window(driver.window_handles[-1])
+    assert driver.current_url == 'https://twitter.com/orangehrm'
+
+
+@allure.description("Check that youtube link is working")
+@allure.severity(severity_level="NORMAL")
+def test_youtube_link(set_up):
+    driver.find_element_by_xpath('//*[@id="social-icons"]/a[4]/img').click()
+    driver.switch_to.window(driver.window_handles[-1])
+    assert 'https://www.youtube.com' in driver.current_url
+
+
+@allure.description("Check that linkedin link is working")
+@allure.severity(severity_level="NORMAL")
+def test_youtube_link(set_up):
+    driver.find_element_by_xpath('//*[@id="social-icons"]/a[1]/img').click()
+    driver.switch_to.window(driver.window_handles[-1])
+    assert driver.current_url == 'http://lawfilter.ertelecom.ru/'
